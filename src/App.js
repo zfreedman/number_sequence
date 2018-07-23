@@ -15,6 +15,9 @@ class App extends Component {
             This application will allow you to test how well you can remember a
             sequence of numbers.
           </p>
+          <p>
+            When prompted for input #<i>n</i>, enter the <i>nth</i> number from the sequence.
+          </p>
         </header>
         <Game />
       </div>

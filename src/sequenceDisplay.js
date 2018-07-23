@@ -2,6 +2,8 @@ import React from "react";
 
 import GameInput from "./gameInput";
 
+// const DISPLAY_STATE =
+
 class SequenceDisplay extends React.Component {
   constructor(props) {
     super(props);
@@ -14,14 +16,19 @@ class SequenceDisplay extends React.Component {
   render() {
     return (
       <div className="sequenceDisplay">
-        {this.state.doneCounting ? <GameInput /> : <h1></h1>}
+        {this.state.doneCounting
+          ? <GameInput
+              handleSubmit={this.props.handleSubmit}
+              testIndex={this.props.testIndex}
+            />
+          : <h1></h1>}
       </div>
     );
   }
 
   componentDidMount() {
     this.header = document.querySelector(".sequenceDisplay > h1");
-    this.countDown();
+    this.fakeRemount();
   }
 
   countDown = () => {
@@ -42,9 +49,15 @@ class SequenceDisplay extends React.Component {
     }, 1000);
   };
 
+  fakeRemount = () => {
+    this.setState({doneCounting: false});
+    this.countDown();
+  };
+
   showNumbers = () => {
     let count = 0;
-    this.interval = setInterval(() => {
+
+    let showNextNumber = () => {
       // count
       if (count < this.props.numbers.length) {
         this.header.innerHTML = this.props.numbers[count];
@@ -55,7 +68,10 @@ class SequenceDisplay extends React.Component {
         clearInterval(this.interval);
         this.setState({doneCounting: true});
       }
-    }, 1000);
+    };
+
+    showNextNumber();
+    this.interval = setInterval(showNextNumber, 1000);
   };
 }
 
