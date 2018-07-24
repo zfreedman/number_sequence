@@ -13,7 +13,6 @@ class SequenceDisplay extends React.Component {
     this.state = {
       animateNumbersIndex: 0,
       displayState: DISPLAY_STATE_READY,
-      doneCounting: false,
       readySetGoIndex: 0,
       readySetGoList: ["ready", "set", "go"],
     };
@@ -34,8 +33,15 @@ class SequenceDisplay extends React.Component {
   }
 
   componentDidMount() {
-    this.header = document.querySelector(".sequenceDisplay > h1");
     this.animateReadySetGo();
+  }
+
+  componentDidUpdate(prevProps) {
+    // need to animate new numbers when numbers array has changed
+    if (this.props.numbers.length != prevProps.numbers.length) {
+      this.resetAnimationState();
+      this.animateReadySetGo();
+    }
   }
 
   animateReadySetGo = () => {
@@ -52,11 +58,6 @@ class SequenceDisplay extends React.Component {
     }, 1000);
   };
 
-  fakeRemount = () => {
-    this.setState({doneCounting: false});
-    this.countDown();
-  };
-
   renderBasedOnDisplayState = () => {
     switch (this.state.displayState) {
       case DISPLAY_STATE_READY:
@@ -64,10 +65,23 @@ class SequenceDisplay extends React.Component {
       case DISPLAY_STATE_NUMBERS:
         return this.props.numbers[this.state.animateNumbersIndex];
       case DISPLAY_STATE_INPUT:
-        return <GameInput testIndex={this.props.testIndex} />;
+        return (
+          <GameInput
+            handleSubmit={this.props.handleSubmit}
+            testIndex={this.props.testIndex}
+          />
+        );
       default:
         return "this is bad";
     }
+  };
+
+  resetAnimationState = () => {
+    this.setState({
+      animateNumbersIndex: 0,
+      displayState: DISPLAY_STATE_READY,
+      readySetGoIndex: 0
+    });
   };
 
   showNumbers = () => {

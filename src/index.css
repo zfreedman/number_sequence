@@ -21,6 +21,38 @@ body {
   padding-top: 25px;
 }
 
+.gameContainer {
+  background-color: #222222;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  min-height: 250px;
+  min-width: 250px;
+}
+
+.gameOverDisplay {
+  background-color: #ff5050;
+  border: none;
+  border-radius: 50%;
+  color: #222222;
+  font-size: 36px;
+  height: 150px;
+  transition: 0.1s;
+  width: 150px;
+}
+.gameOverDisplay:focus {
+  outline: none;
+}
+.gameOverDisplay:active {
+  transform: scale(.98) !important;
+}
+.gameOverDisplay:hover {
+  transform: scale(1.02);
+}
+
 input {
   border: none;
   border-radius: 50%;
@@ -41,7 +73,7 @@ input::-webkit-inner-spin-button {
 }
 
 .sequenceDisplay {
-  background-color: #222222;
+  /* background-color: #222222;
   border-radius: 50%;
   color: white;
   display: flex;
@@ -49,5 +81,5 @@ input::-webkit-inner-spin-button {
   justify-content: center;
   font-size: 48px;
   min-height: 250px;
-  min-width: 250px;
+  min-width: 250px; */
 }

@@ -1,5 +1,6 @@
 import React from "react";
 
+import GameOverDisplay from "./gameOverDisplay";
 import SequenceDisplay from "./sequenceDisplay";
 
 const GAME_STATE_OVER = -1;
@@ -14,18 +15,20 @@ class Game extends React.Component {
     this.state = {
       gameState: GAME_STATE_PLAYING,
       numberCount,
-      numbers: this.getNextNumbers(numberCount),
       numberMax: 100,
+      numbers: this.getNextNumbers(numberCount),
+      score: 0,
       testIndex: this.getTestIndex(numberCount),
-      score: 0
     };
   }
   render() {
     return (
       <div className="game">
-        {
-          this.renderBasedOnState()
-        }
+        <div className="gameContainer">
+          {
+            this.renderBasedOnState()
+          }
+        </div>
       </div>
     );
   }
@@ -50,34 +53,33 @@ class Game extends React.Component {
 
   getTestIndex = n => Math.floor(Math.random() * n);
 
-  handleSubmit = (answer, remountCB) => {
+  handleSubmit = answer => {
     // check if answer is correct
     let points = answer === this.state.numbers[this.state.testIndex] ? 1 : 0;
 
     // move to next level
     points === 1
-      ? this.loadNextLevel(remountCB)
+      ? this.loadNextLevel()
       : this.loadGameOver();
   };
 
   loadGameOver = () => {
-    ;
+    this.setState({gameState: GAME_STATE_OVER});
   };
 
-  loadNextLevel = (remountCB = null) => {
+  loadNextLevel = () => {
     let numberCount = this.state.numberCount + 1;
     this.setState({
       numberCount,
       numbers: this.getNextNumbers(numberCount),
       testIndex: this.getTestIndex(numberCount)
     });
-    if (remountCB) {
-      remountCB();
-    }
   };
 
   renderBasedOnState = () => {
     switch (this.state.gameState) {
+      case GAME_STATE_OVER:
+        return <GameOverDisplay />
       case GAME_STATE_PLAYING:
         return <SequenceDisplay
           numbers={

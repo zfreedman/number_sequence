@@ -10,6 +10,7 @@ class GameInput extends React.Component {
   {
     return (
       <input
+        autoFocus={true}
         onChange={this.handleOnChange}
         onKeyDown={this.handleOnKeyDown}
         placeholder={`#${this.props.testIndex + 1}`}
