@@ -8,6 +8,24 @@ body {
   padding-bottom: 70px !important;
 }
 
+.circleButton {
+  border: none;
+  border-radius: 50%;
+  font-size: 36px;
+  height: 150px;
+  transition: 0.1s;
+  width: 150px;
+}
+.circleButton:focus {
+  outline: none;
+}
+.circleButton:active {
+  transform: scale(.98) !important;
+}
+.circleButton:hover {
+  transform: scale(1.02);
+}
+
 .countDown {
   font-size: 36px;
   margin: none;
@@ -35,22 +53,10 @@ body {
 
 .gameOverDisplay {
   background-color: #ff5050;
-  border: none;
-  border-radius: 50%;
-  color: #222222;
-  font-size: 36px;
-  height: 150px;
-  transition: 0.1s;
-  width: 150px;
 }
-.gameOverDisplay:focus {
-  outline: none;
-}
-.gameOverDisplay:active {
-  transform: scale(.98) !important;
-}
-.gameOverDisplay:hover {
-  transform: scale(1.02);
+
+.gameReadyDisplay {
+  background-color: #00ddff;
 }
 
 input {

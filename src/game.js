@@ -1,11 +1,12 @@
 import React from "react";
 
 import GameOverDisplay from "./gameOverDisplay";
+import GameReadyDisplay from "./gameReadyDisplay";
 import SequenceDisplay from "./sequenceDisplay";
 
 const GAME_STATE_OVER = -1;
-const GAME_STATE_PLAYING = 0;
-const GAME_STATE_READY = 1;
+const GAME_STATE_READY = 0;
+const GAME_STATE_PLAYING = 1;
 
 class Game extends React.Component {
   constructor(props) {
@@ -13,7 +14,7 @@ class Game extends React.Component {
 
     let numberCount = 1;
     this.state = {
-      gameState: GAME_STATE_PLAYING,
+      gameState: GAME_STATE_READY,
       numberCount,
       numberMax: 100,
       numbers: this.getNextNumbers(numberCount),
@@ -53,6 +54,17 @@ class Game extends React.Component {
 
   getTestIndex = n => Math.floor(Math.random() * n);
 
+  handleStart = () => {
+    let numberCount = 1;
+    this.setState({
+      gameState: GAME_STATE_PLAYING,
+      numberCount,
+      numbers: this.getNextNumbers(numberCount),
+      score: 0,
+      testIndex: this.getTestIndex(numberCount)
+    });
+  };
+
   handleSubmit = answer => {
     // check if answer is correct
     let points = answer === this.state.numbers[this.state.testIndex] ? 1 : 0;
@@ -61,6 +73,12 @@ class Game extends React.Component {
     points === 1
       ? this.loadNextLevel()
       : this.loadGameOver();
+  };
+
+  handleRestart = () => {
+    this.setState({
+      gameState: GAME_STATE_READY
+    });
   };
 
   loadGameOver = () => {
@@ -79,7 +97,7 @@ class Game extends React.Component {
   renderBasedOnState = () => {
     switch (this.state.gameState) {
       case GAME_STATE_OVER:
-        return <GameOverDisplay />
+        return <GameOverDisplay handleClick={this.handleRestart} />
       case GAME_STATE_PLAYING:
         return <SequenceDisplay
           numbers={
@@ -90,6 +108,8 @@ class Game extends React.Component {
           }
           handleSubmit={this.handleSubmit}
         />
+      case GAME_STATE_READY:
+        return <GameReadyDisplay handleClick={this.handleStart} />
       default:
         null;
     }
