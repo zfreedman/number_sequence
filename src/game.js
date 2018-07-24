@@ -2,6 +2,7 @@ import React from "react";
 
 import GameOverDisplay from "./gameOverDisplay";
 import GameReadyDisplay from "./gameReadyDisplay";
+import ScoreDisplay from "./scoreDisplay";
 import SequenceDisplay from "./sequenceDisplay";
 
 const GAME_STATE_OVER = -1;
@@ -23,6 +24,7 @@ class Game extends React.Component {
     };
   }
   render() {
+    let gameState = this.state.gameState;
     return (
       <div className="game">
         <div className="gameContainer">
@@ -30,6 +32,11 @@ class Game extends React.Component {
             this.renderBasedOnState()
           }
         </div>
+        {
+          true || gameState === GAME_STATE_PLAYING || gameState === GAME_STATE_READY
+          ? <ScoreDisplay score={this.state.score} />
+          : ""
+        }
       </div>
     );
   }
@@ -60,7 +67,6 @@ class Game extends React.Component {
       gameState: GAME_STATE_PLAYING,
       numberCount,
       numbers: this.getNextNumbers(numberCount),
-      score: 0,
       testIndex: this.getTestIndex(numberCount)
     });
   };
@@ -68,6 +74,7 @@ class Game extends React.Component {
   handleSubmit = answer => {
     // check if answer is correct
     let points = answer === this.state.numbers[this.state.testIndex] ? 1 : 0;
+    this.setState({score: this.state.score + points});
 
     // move to next level
     points === 1
@@ -77,7 +84,8 @@ class Game extends React.Component {
 
   handleRestart = () => {
     this.setState({
-      gameState: GAME_STATE_READY
+      gameState: GAME_STATE_READY,
+      score: 0
     });
   };
 
