@@ -2,45 +2,48 @@ import React from "react";
 
 import GameInput from "./gameInput";
 
-// const DISPLAY_STATE =
+const DISPLAY_STATE_READY = 0;
+const DISPLAY_STATE_NUMBERS = 1;
+const DISPLAY_STATE_INPUT = 2;
 
 class SequenceDisplay extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      doneCounting: false
+      animateNumbersIndex: 0,
+      displayState: DISPLAY_STATE_READY,
+      doneCounting: false,
+      readySetGoIndex: 0,
+      readySetGoList: ["ready", "set", "go"],
     };
   }
 
   render() {
+    // {this.state.doneCounting
+    //   ? <GameInput
+    //       handleSubmit={this.props.handleSubmit}
+    //       testIndex={this.props.testIndex}
+    //     />
+    //   : <h1></h1>}
     return (
       <div className="sequenceDisplay">
-        {this.state.doneCounting
-          ? <GameInput
-              handleSubmit={this.props.handleSubmit}
-              testIndex={this.props.testIndex}
-            />
-          : <h1></h1>}
+        {this.renderBasedOnDisplayState()}
       </div>
     );
   }
 
   componentDidMount() {
     this.header = document.querySelector(".sequenceDisplay > h1");
-    this.fakeRemount();
+    this.animateReadySetGo();
   }
 
-  countDown = () => {
-    let displays = ["ready", "set", "go"];
-    let count = 0;
+  animateReadySetGo = () => {
     this.interval = setInterval(() => {
-      if (count < displays.length) {
-        this.header.innerHTML = `
-          <div class="countDown">
-            ${displays[count++]}
-          </div>
-        `
+      let i = this.state.readySetGoIndex;
+      let arr = this.state.readySetGoList;
+      if (i < arr.length - 1) {
+        this.setState({readySetGoIndex: i + 1})
       }
       else {
         clearInterval(this.interval);
@@ -54,24 +57,32 @@ class SequenceDisplay extends React.Component {
     this.countDown();
   };
 
-  showNumbers = () => {
-    let count = 0;
+  renderBasedOnDisplayState = () => {
+    switch (this.state.displayState) {
+      case DISPLAY_STATE_READY:
+        return this.state.readySetGoList[this.state.readySetGoIndex];
+      case DISPLAY_STATE_NUMBERS:
+        return this.props.numbers[this.state.animateNumbersIndex];
+      case DISPLAY_STATE_INPUT:
+        return <GameInput testIndex={this.props.testIndex} />;
+      default:
+        return "this is bad";
+    }
+  };
 
-    let showNextNumber = () => {
-      // count
-      if (count < this.props.numbers.length) {
-        this.header.innerHTML = this.props.numbers[count];
-        count += 1
+  showNumbers = () => {
+    this.setState({displayState: DISPLAY_STATE_NUMBERS});
+
+    this.interval = setInterval(() => {
+      let i = this.state.animateNumbersIndex;
+      if (i < this.props.numbers.length - 1) {
+        this.setState({animateNumbersIndex: i + 1})
       }
-      // else
       else {
         clearInterval(this.interval);
-        this.setState({doneCounting: true});
+        this.setState({displayState: DISPLAY_STATE_INPUT});
       }
-    };
-
-    showNextNumber();
-    this.interval = setInterval(showNextNumber, 1000);
+    }, 1000);
   };
 }
 
