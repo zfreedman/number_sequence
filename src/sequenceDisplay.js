@@ -10,6 +10,9 @@ class SequenceDisplay extends React.Component {
   constructor(props) {
     super(props);
 
+    this.decayRate = .9;
+    this.timeBetweenNumbers = 1000;
+
     this.state = {
       animateNumbersIndex: 0,
       displayState: DISPLAY_STATE_READY,
@@ -41,6 +44,12 @@ class SequenceDisplay extends React.Component {
     if (this.props.numbers.length != prevProps.numbers.length) {
       this.resetAnimationState();
       this.animateReadySetGo();
+    }
+    // create faster number displays
+    if (this.props.numbers.length > prevProps.numbers.length) {
+      this.timeBetweenNumbers *= this.decayRate;
+      this.timeBetweenNumbers = Math.max(this.timeBetweenNumbers, 100);
+      console.log(this.timeBetweenNumbers);
     }
   }
 
@@ -96,7 +105,7 @@ class SequenceDisplay extends React.Component {
         clearInterval(this.interval);
         this.setState({displayState: DISPLAY_STATE_INPUT});
       }
-    }, 1000);
+    }, this.timeBetweenNumbers);
   };
 }
 
